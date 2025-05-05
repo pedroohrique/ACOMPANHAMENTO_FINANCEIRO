@@ -6,7 +6,7 @@ from datetime import datetime
 
 log = log_builder("treeview_handler.py")
 
-def handler(treeview, widget_1=None, widget_2=None, widget_3=None, Event=None):
+def handler(treeview, widget_1="", widget_2="", widget_3="", Event=None):
     connection, cursor = database_connection()
     dados = get_value(widget_1, widget_2, widget_3)
     
