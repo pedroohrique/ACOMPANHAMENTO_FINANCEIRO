@@ -17,7 +17,7 @@ def handler(treeview, widget_1="", widget_2="", widget_3="", Event=None):
                     treeview.insert("", "end", values=(item[0], 
                                                     item[1], str(item[2]) + " " + "R$", 
                                                     str(item[3]) + " " + "R$", str(item[4]) + " " + "R$", 
-                                                    item[5], item[6], item[7], item[8], item[9], 
+                                                    item[5].capitalize(), item[6], item[7], item[8], item[9], 
                                                     item[10], item[11]), tags=(tag,))
         except Exception as e:
             log.error(f"Falha ao inserir os dados na Treeview: {e}")
