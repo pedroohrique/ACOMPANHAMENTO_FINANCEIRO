@@ -7,7 +7,7 @@ from tkinter import messagebox
 
 log = log_builder("action_handler.py")
 
-def gerenciar_dados_formulario(widget, acao="", id=None):
+def gerenciar_dados_formulario(widget, acao=""):
     
     categorias = category_map()
     formas = payment_method_map()
@@ -22,14 +22,13 @@ def gerenciar_dados_formulario(widget, acao="", id=None):
             "desc_local": widget[4].get(),
             "forma_pagamento": formas.get(widget[5].get().upper()),
             "flag_parcelamento": widget[6].get()[0:-2],
-            "qt_parcelas": int(widget[7].get())
+            "qt_parcelas": int(widget[7].get()),
+            "id_registro": widget[8]
             }
         
         validar_formulaio(array=valores_obtidos)
-        record_financial(array=valores_obtidos) if acao == "cadastrar" else update_financial(array=valores_obtidos, id_registro=id)
-        messagebox.showinfo("Aviso", "Operação concluída com sucesso!")
+        record_financial(array=valores_obtidos) if acao == "cadastrar" else update_financial(array=valores_obtidos, id_registro=valores_obtidos["id_registro"])
         
-    
     except ValueError as e:
         messagebox.showerror("Erro", f"Verifique os valores informados: {e}")
         log.error(f"Falha ao gerenciar os dados do formulário: {e}")
