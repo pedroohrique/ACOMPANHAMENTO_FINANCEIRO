@@ -20,7 +20,7 @@ class AppInterface:
         def setup_menu(root):
             menu = Menu(self.root)
             self.root.configure(menu=menu)
-            menu.add_command(label="Registrar Gasto", command=lambda: Formulario(modo="cadastrar"))
+            menu.add_command(label="Registrar Gasto", command=lambda: Formulario(modo="cadastrar", root=self.root))
             menu.add_command(label="Atualizar", command = lambda: handler(root))
             
         def setup_filtro(Event=None):           
