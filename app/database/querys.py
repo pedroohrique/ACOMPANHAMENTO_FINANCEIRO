@@ -34,7 +34,6 @@ def category_map() -> dict:
 
 
 def update_financial(array, id_registro):
-    pass
     connection, cursor = database_connection()
     query = """UPDATE TB_REG_FINANC 
                 SET 
@@ -47,20 +46,24 @@ def update_financial(array, id_registro):
                     PARCELAMENTO = ?,
                     N_PARCELAS = ?
                 WHERE ID_REGISTRO = ?"""
+    try:
     
-    with connection:
-        cursor.execute(query,
-                       array["dt_gasto"],
-                       array["valor"],
-                       array["desc"],
-                       array["desc_local"],
-                       array["desc_categoria"],
-                       array["forma_pagamento"],
-                       array["flag_parcelamento"],
-                       array["qt_parcelas"],
-                       id_registro)
-    
-
+        with connection:
+            cursor.execute(query,
+                        array["dt_gasto"],
+                        array["valor"],
+                        array["desc"],
+                        array["desc_local"],
+                        array["desc_categoria"],
+                        array["forma_pagamento"],
+                        array["flag_parcelamento"],
+                        array["qt_parcelas"],
+                        id_registro)
+    except Exception as e:
+        log.error(f"Falha ao atualizar o registro selecionado: {e}")
+    finally:
+        cursor.close()
+        
 def record_financial(array):
     connection, cursor = database_connection()
     query = """INSERT INTO TB_REG_FINANC (
