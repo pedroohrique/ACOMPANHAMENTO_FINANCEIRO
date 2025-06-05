@@ -16,7 +16,7 @@ def treeview_click_handler(treeview, tkinter, tkinter_funcition):
             container_botoes = tkinter_funcition(treeview)
             container_botoes.geometry(f"100x60+{x_root}+{y_root}")
             container_botoes.overrideredirect(True)
-            tkinter.Button(container_botoes, text="Alterar", font=("Helvetica", 10, "bold"), fg="#32CD32", command=lambda:[container_botoes.destroy(), Formulario(registros, modo="atualizar")]).pack(fill=tkinter.BOTH, expand=True)
+            tkinter.Button(container_botoes, text="Alterar", font=("Helvetica", 10, "bold"), fg="#32CD32", command=lambda:[container_botoes.destroy(), Formulario(treeview, registros, modo="atualizar")]).pack(fill=tkinter.BOTH, expand=True)
             tkinter.Button(container_botoes, text="Excluir", font=("Helvetica", 10, "bold"), fg="#FF0000", command=lambda:[container_botoes.destroy(), deleta_item_treeview(registros[8]), handler(treeview)]).pack(fill=tkinter.BOTH, expand=True)
 
             def close_window(event):
