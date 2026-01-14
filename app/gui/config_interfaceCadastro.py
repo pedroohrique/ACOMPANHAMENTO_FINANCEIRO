@@ -9,10 +9,11 @@ class Formulario:
         self.dados = array
         self.modo = modo
         self.dados_formulario = {}
-        self.setup_formulario()
         titulo_formulario = "Registro de Gastos" if self.modo == "cadastrar" else "Atualização de Registros"
         self.frame.title(titulo_formulario)
+        self.setup_formulario()
         self.frame.mainloop()
+        
         
     def setup_formulario(self):
         
