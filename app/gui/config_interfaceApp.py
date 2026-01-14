@@ -5,6 +5,7 @@ from app.gui.services.treeview_handler import handler
 from app.utils.logger import log_builder
 from app.gui.services.row_action_manager import treeview_click_handler
 from app.gui.config_interfaceCadastro import Formulario
+from app.gui.config_interfaceExport import InterfaceExport
 
 log = log_builder("config_interface.py")
 
@@ -21,6 +22,7 @@ class AppInterface:
             menu = Menu(self.root)
             self.root.configure(menu=menu)
             menu.add_command(label="Registrar Gasto", command=lambda: Formulario(modo="cadastrar", root=self.root))
+            menu.add_command(label="Exportar Relatório", command=lambda: InterfaceExport(root=self.root))
             menu.add_command(label="Atualizar", command = lambda: handler(root))
             
         def setup_filtro(Event=None):           
@@ -50,7 +52,8 @@ class AppInterface:
             self.entry_dt_vencimento.grid(row=0, column=5, pady=6, sticky="w")
             
         
-        def setup_treeview():             
+        def setup_treeview():  
+                       
             setup_filtro()        
             
             frame_treeview = tk.Frame(self.root, bd=2, relief="solid")
