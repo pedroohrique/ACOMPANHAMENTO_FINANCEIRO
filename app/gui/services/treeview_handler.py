@@ -49,7 +49,7 @@ def handler(treeview, widget_1="", widget_2="", widget_3="", Event=None):
     else:              
         query = with_no_filter()
         with connection:            
-            cursor.execute(query, datetime.today().month)
+            cursor.execute(query)
             resultado = cursor.fetchall()  
             
     cursor.close()      

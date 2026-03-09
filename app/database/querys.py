@@ -148,8 +148,6 @@ def with_no_filter():
                     JOIN TB_CATEGORIA C ON AF.IDCATEGORIA = C.ID_CATEGORIA
                     JOIN TB_REG_FINANC RF ON AF.IDREGISTRO = RF.ID_REGISTRO
                     JOIN TB_FORMA_PAGAMENTO FP ON RF.IDFORMA_PAGAMENTO = FP.ID_FORMA
-                WHERE
-                    MONTH(AF.DT_PAGAMENTO) >= ?
                 ORDER BY
                     AF.DT_COMPRA DESC"""
         
@@ -339,5 +337,79 @@ def fg_monthly_summary(params):
     finally:
         cursor.close()
 
+def query_money_flow(params):
+    query = """WITH BASE AS (
+                    SELECT IDREGISTRO, DATA_REGISTRO
+                    FROM TB_FLUXO_CAIXA
+                    WHERE 
+                        MONTH(DATA_REGISTRO) = ?
+                        AND YEAR(DATA_REGISTRO) = ? 
+                ),
+                VL_ACUMULADO AS (
+                    SELECT TOP 1 
+                        IDREGISTRO, 
+                        VALOR_ACUMULADO AS VL_ACUMULADO
+                    FROM TB_FLUXO_CAIXA 
+                    ORDER BY ID_FLUXO DESC
+                ),
+                VL_SAIDAS AS (
+                    SELECT 
+                        IDREGISTRO,
+                        SUM(VALOR) AS VL_SAIDAS
+                    FROM TB_FLUXO_CAIXA 
+                    WHERE IDCATEGORIA != 800 
+                    GROUP BY IDREGISTRO
+                ),
+                VL_ENTRADAS AS (
+                    SELECT 
+                        IDREGISTRO,
+                        COALESCE(SUM(VALOR), 0) AS VL_ENTRADAS
+                    FROM TB_FLUXO_CAIXA 
+                    WHERE IDCATEGORIA = 800 
+                    GROUP BY IDREGISTRO
+                ),
+                VL_MEDIA_SAIDAS AS (
+                    SELECT 
+                        AVG(TOTAL_MES) AS MEDIA_MENSAL
+                    FROM (
+                        SELECT 
+                            SUM(H.VL_PARCELA) AS TOTAL_MES
+                        FROM TB_HISTORICO_FINANC H
+                        JOIN TB_REG_FINANC R 
+                            ON R.ID_REGISTRO = H.IDREGISTRO
+                        WHERE 
+                            R.IDCATEGORIA NOT IN (800, 900)
+                            AND DATEFROMPARTS(H.ANO_DEBITO_PARCELA, H.MES_DEBITO_PARCELA, 1)
+                            >= DATEFROMPARTS(YEAR(GETDATE()), 1, 1)
+                            AND DATEFROMPARTS(H.ANO_DEBITO_PARCELA, H.MES_DEBITO_PARCELA, 1)
+                            <  DATEADD(MONTH, 1, DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1))
+                        GROUP BY 
+                            MES_DEBITO_PARCELA, 
+                            ANO_DEBITO_PARCELA
+                    ) X
+                )
+
+                SELECT 
+                    COALESCE(SUM(T2.VL_ENTRADAS),0) AS VL_ENTRADAS,
+                    COALESCE(SUM(T3.VL_SAIDAS),0)   AS VL_SAIDAS,
+                    MAX(M.MEDIA_MENSAL)  AS CUSTO_MEDIO_MENSAL,
+                    COALESCE(SUM(T1.VL_ACUMULADO),0) AS SALDO_ATUAL
+                FROM 
+                    BASE B
+                    LEFT JOIN VL_ACUMULADO T1 ON T1.IDREGISTRO = B.IDREGISTRO
+                    LEFT JOIN VL_ENTRADAS  T2 ON T2.IDREGISTRO = B.IDREGISTRO
+                    LEFT JOIN VL_SAIDAS    T3 ON T3.IDREGISTRO = B.IDREGISTRO
+                    CROSS JOIN VL_MEDIA_SAIDAS M;"""
+
+    connection, cursor = database_connection()
+    try:
+        with connection:
+            cursor.execute(query, params)
+            resultado_query = cursor.fetchall()
+            return resultado_query
+    except Exception as e:
+        log.error(f"Falha ao executar a query, erro: {e}")
+    finally:
+        cursor.close()
 
 

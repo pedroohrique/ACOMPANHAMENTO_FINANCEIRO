@@ -1,0 +1,30 @@
+{
+  "labels": {
+    "01": "DEMONSTRATIVO FINANCEIRO",
+    "02": "VISÃO GERAL",
+    "03": "GASTOS POR CATEGORIA",
+    "04": "DÍVIDAS E PARCELAMENTOS",
+    "05": "RESUMO - GASTOS MENSAIS",
+    "06": "Este demonstrativo financeiro tem como objetivo apresentar um panorama detalhado da situação financeira pessoal no período atual. O relatório consolida informações sobre orçamento mensal, gastos realizados, distribuição por categoria, uso de diferentes formas de pagamento, dívidas e parcelamentos ativos, além de um histórico de despesas mensais. A finalidade deste documento é auxiliar no acompanhamento e controle das finanças, promovendo uma gestão mais consciente dos recursos, identificação de padrões de consumo e apoio à tomada de decisões financeiras mais assertivas.",
+    "07": "DIAS RESTANTES (MÊS ATULA): ",
+    "08": "ORÇAMENTO MENSAL: ",
+    "09": "7500.00 R$",
+    "10": "GASTO TOTAL (MÊS ATUAL): ",
+    "11": "VALOR DISPONÍVEL (MÊS ATUAL): ",
+    "12": "GASTO RECOMENDADO (DIÁRIO): ",
+    "13": "TRANSPORTE: ",
+    "14": "ALIMENTAÇÃO: ",
+    "15": "MORADIA: ",
+    "16": "SAÚDE: ",
+    "17": "LAZER E ENTRETENIMENTO: ",
+    "18": "PAGAMENTO FATURA: ",
+    "19": "GASTOS OCASIONAIS: ",
+    "20": "OUTROS: ",
+    "21": "EDUCAÇÃO: ",
+    "22": "INVESIMENTOS E APLICAÇÕES: ",
+    "23": "COMPRAS: ",
+    "24": "QTD DE PARCELAMENTOS ATIVOS: ",
+    "25": "VALOR COMPROMETIDO COM PARCELAS FUTURAS: "
+    
+  }
+}

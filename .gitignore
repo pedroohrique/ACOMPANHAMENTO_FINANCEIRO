@@ -18,4 +18,4 @@ build/
 *.tmp
 
 app/utils/log_aplicacao.txt
-
+app/Relatórios
