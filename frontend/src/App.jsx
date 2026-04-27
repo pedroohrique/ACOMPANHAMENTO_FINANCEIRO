@@ -33,7 +33,8 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend
+  Legend,
+  LabelList
 } from 'recharts'
 import './App.css'
 
@@ -298,11 +299,30 @@ function App() {
                   <h3>Fluxo Mensal</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={resumoMensal}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                      <XAxis dataKey="mes" stroke="#94a3b8" fontSize={12} />
-                      <YAxis stroke="#94a3b8" fontSize={12} />
-                      <Tooltip formatter={(value) => `R$ ${value}`} contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
-                      <Bar name="Gasto" dataKey="gasto" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                      <defs>
+                        <linearGradient id="colorGasto" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="mes" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(val) => `R$ ${val}`} />
+                      <Tooltip 
+                        formatter={(value) => formatCurrency(value)} 
+                        contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.3)' }} 
+                      />
+                      <Bar name="Gasto" dataKey="gasto" fill="url(#colorGasto)" radius={[6, 6, 0, 0]}>
+                        {resumoMensal.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill="url(#colorGasto)" />
+                        ))}
+                        <LabelList 
+                          dataKey="gasto" 
+                          position="top" 
+                          formatter={(val) => val > 0 ? formatCurrency(val).replace('R$', '').trim() : ''}
+                          style={{ fill: '#94a3b8', fontSize: '11px', fontWeight: '600' }}
+                        />
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
