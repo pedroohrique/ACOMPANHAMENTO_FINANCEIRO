@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Header, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from datetime import datetime
 import logging
 from typing import Optional, Dict, Any
@@ -26,8 +27,6 @@ from app.database.querys import (
     database_connection
 )
 
-from fastapi import FastAPI, HTTPException, Body, Header, Request
-
 API_KEY_SECRET = "pedro_financas_2026_seguro_!@"
 
 app = FastAPI(title="API Acompanhamento Financeiro")
@@ -44,8 +43,6 @@ async def verify_api_key(request: Request, call_next):
     
     response = await call_next(request)
     return response
-
-from fastapi.responses import JSONResponse
 
 app.add_middleware(
     CORSMiddleware,
@@ -162,6 +159,7 @@ def get_transactions():
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cursor.close()
+        conn.close()
 
 @app.post("/api/transacoes")
 def create_transaction(data: Dict[Any, Any] = Body(...)):
