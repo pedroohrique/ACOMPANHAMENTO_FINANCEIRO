@@ -256,6 +256,13 @@ function App() {
   const recommendedDaily = reportOverview ? (reportOverview.valor_disponivel / daysRemaining) : 0
   const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316']
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value || 0)
+  }
+
   return (
     <div className="app-container">
       <aside className="sidebar glass">
@@ -280,11 +287,11 @@ function App() {
           activeTab === 'dashboard' ? (
             <div className="dashboard-view animate-fade-in">
               <div className="stats-row">
-                <StatCard title="Entradas" value={`R$ ${fluxo?.vl_entradas?.toFixed(2) || '0.00'}`} icon={TrendingUp} type="income" />
-                <StatCard title="Gasto do Mês" value={`R$ ${reportOverview?.total_gastos?.toFixed(2) || '0.00'}`} icon={Receipt} type="expense" />
-                <StatCard title="Saldo Atual" value={`R$ ${fluxo?.saldo_atual?.toFixed(2) || '0.00'}`} icon={Wallet} type="balance" />
-                <StatCard title="Valor Disponível" value={`R$ ${reportOverview?.valor_disponivel?.toFixed(2) || '0.00'}`} icon={DollarSign} type="average" subtitle="Livre para uso" />
-                <StatCard title="Recomendado" value={`R$ ${recommendedDaily.toFixed(2)}`} icon={Zap} type="warning" subtitle="Limite diário" />
+                <StatCard title="Entradas" value={formatCurrency(fluxo?.vl_entradas)} icon={TrendingUp} type="income" />
+                <StatCard title="Gasto do Mês" value={formatCurrency(reportOverview?.total_gastos)} icon={Receipt} type="expense" />
+                <StatCard title="Saldo Atual" value={formatCurrency(fluxo?.saldo_atual)} icon={Wallet} type="balance" />
+                <StatCard title="Valor Disponível" value={formatCurrency(reportOverview?.valor_disponivel)} icon={DollarSign} type="average" subtitle="Livre para uso" />
+                <StatCard title="Recomendado" value={formatCurrency(recommendedDaily)} icon={Zap} type="warning" subtitle="Limite diário" />
               </div>
               <div className="charts-row">
                 <div className="chart-container glass">
