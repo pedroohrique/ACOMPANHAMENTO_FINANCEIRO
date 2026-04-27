@@ -1,0 +1,9 @@
+inbound:
+  - expressions:
+      - "!req.headers['Authorization'].exists() || req.headers['Authorization'] != 'Basic ' + base64.encode('pedro:financeiro123')"
+    actions:
+      - type: deny
+        config:
+          status_code: 401
+          headers:
+            WWW-Authenticate: "Basic realm=\"Acesso Restrito\""
