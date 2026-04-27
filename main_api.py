@@ -26,7 +26,26 @@ from app.database.querys import (
     database_connection
 )
 
+from fastapi import FastAPI, HTTPException, Body, Header, Request
+
+API_KEY_SECRET = "pedro_financas_2026_seguro_!@"
+
 app = FastAPI(title="API Acompanhamento Financeiro")
+
+@app.middleware("http")
+async def verify_api_key(request: Request, call_next):
+    # Pula a verificação para opções (CORS)
+    if request.method == "OPTIONS":
+        return await call_next(request)
+    
+    api_key = request.headers.get("X-API-Key")
+    if api_key != API_KEY_SECRET:
+        return JSONResponse(status_code=403, content={"detail": "Acesso negado: Chave de API invalida"})
+    
+    response = await call_next(request)
+    return response
+
+from fastapi.responses import JSONResponse
 
 app.add_middleware(
     CORSMiddleware,

@@ -40,10 +40,11 @@ import './App.css'
 // API Base URL from environment or default to local
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Default headers to skip ngrok browser warning
+// Security Configuration
 const API_HEADERS = {
   'Content-Type': 'application/json',
-  'ngrok-skip-browser-warning': '69420'
+  'ngrok-skip-browser-warning': '69420',
+  'X-API-Key': 'pedro_financas_2026_seguro_!@' // Chave de segurança para a API
 };
 
 function App() {
@@ -78,7 +79,7 @@ function App() {
   const monthsList = [
     { id: 1, name: 'Janeiro' }, { id: 2, name: 'Fevereiro' }, { id: 3, name: 'Março' },
     { id: 4, name: 'Abril' }, { id: 5, name: 'Maio' }, { id: 6, name: 'Junho' },
-    { id: 7, name: 'Julho' }, { id: 8, name: 'Abril' }, { id: 9, name: 'Setembro' },
+    { id: 7, name: 'Julho' }, { id: 8, name: 'Agosto' }, { id: 9, name: 'Setembro' },
     { id: 10, name: 'Outubro' }, { id: 11, name: 'Novembro' }, { id: 12, name: 'Dezembro' }
   ]
 
@@ -91,15 +92,16 @@ function App() {
   const fetchData = async () => {
     try {
       setLoading(true)
+      const fetchOptions = { headers: API_HEADERS };
       const [resFluxo, resResumo, resCategorias, resTrans, resDebitos, resReport, resCats, resWays] = await Promise.all([
-        fetch(`${API_URL}/api/fluxo-caixa/${currentYear}/${currentMonth}`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/resumo-mensal/${currentYear}`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/gastos-por-categoria/${currentYear}/${currentMonth}`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/transacoes`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/debitos-pendentes`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/visao-geral-relatorio/${currentYear}/${currentMonth}`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/categorias`, { headers: API_HEADERS }),
-        fetch(`${API_URL}/api/formas-pagamento`, { headers: API_HEADERS })
+        fetch(`${API_URL}/api/fluxo-caixa/${currentYear}/${currentMonth}`, fetchOptions),
+        fetch(`${API_URL}/api/resumo-mensal/${currentYear}`, fetchOptions),
+        fetch(`${API_URL}/api/gastos-por-categoria/${currentYear}/${currentMonth}`, fetchOptions),
+        fetch(`${API_URL}/api/transacoes`, fetchOptions),
+        fetch(`${API_URL}/api/debitos-pendentes`, fetchOptions),
+        fetch(`${API_URL}/api/visao-geral-relatorio/${currentYear}/${currentMonth}`, fetchOptions),
+        fetch(`${API_URL}/api/categorias`, fetchOptions),
+        fetch(`${API_URL}/api/formas-pagamento`, fetchOptions)
       ])
 
       const dFluxo = await resFluxo.json()
@@ -274,9 +276,7 @@ function App() {
           </div>
         </header>
 
-        {loading ? (
-          <div className="loading-state"><p>Carregando...</p></div>
-        ) : (
+        {loading ? <div className="loading-state"><p>Carregando...</p></div> : (
           activeTab === 'dashboard' ? (
             <div className="dashboard-view animate-fade-in">
               <div className="stats-row">
@@ -286,7 +286,6 @@ function App() {
                 <StatCard title="Valor Disponível" value={`R$ ${reportOverview?.valor_disponivel?.toFixed(2) || '0.00'}`} icon={DollarSign} type="average" subtitle="Livre para uso" />
                 <StatCard title="Recomendado" value={`R$ ${recommendedDaily.toFixed(2)}`} icon={Zap} type="warning" subtitle="Limite diário" />
               </div>
-
               <div className="charts-row">
                 <div className="chart-container glass">
                   <h3>Fluxo Mensal</h3>
@@ -300,7 +299,6 @@ function App() {
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-
                 <div className="chart-container glass">
                   <h3>Gastos por Categoria</h3>
                   <div className="category-layout">
@@ -328,7 +326,6 @@ function App() {
                   </div>
                 </div>
               </div>
-
               <div className="report-section glass" style={{ marginBottom: '24px' }}>
                 <h3>Débitos Pendentes</h3>
                 <div className="table-container">
@@ -342,7 +339,6 @@ function App() {
                   </table>
                 </div>
               </div>
-
               <div className="report-section glass">
                 <h3>Resumo Anual Consolidado - {currentYear}</h3>
                 <div className="table-container">
