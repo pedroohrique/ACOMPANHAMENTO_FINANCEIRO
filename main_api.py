@@ -75,15 +75,33 @@ def get_payment_methods():
     return {"formas_pagamento": get_db_data(payment_method_map) or {}}
 
 # --- ROTAS DE DASHBOARD / RELATÓRIO ---
+def parse_currency(value):
+    if value is None: return 0.0
+    if isinstance(value, (int, float)): return float(value)
+    # Remove R$, espaços e converte formato brasileiro para americano
+    clean = str(value).replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
+    try:
+        return float(clean)
+    except:
+        return 0.0
+
 @app.get("/api/resumo-mensal/{ano}")
 def get_monthly_summary_route(ano: int):
     resumo = get_db_data(fg_monthly_summary, (ano,))
     if not resumo: return {"resumo": []}
     
     return {"resumo": [{
-        "mes": linha[0], "ano": linha[1], "orcamento": linha[2], "gasto": linha[3], 
-        "saldo": linha[4], "percentual": linha[5], "qtd": linha[6], "maior_gasto": linha[7],
-        "acumulado": linha[8], "variacao": linha[9], "percentual_var": linha[10]
+        "mes": str(linha[0]).strip(), 
+        "ano": linha[1], 
+        "orcamento": parse_currency(linha[2]), 
+        "gasto": parse_currency(linha[3]), 
+        "saldo": parse_currency(linha[4]), 
+        "percentual": linha[5], 
+        "qtd": linha[6], 
+        "maior_gasto": linha[7],
+        "acumulado": parse_currency(linha[8]), 
+        "variacao": linha[9], 
+        "percentual_var": linha[10]
     } for linha in resumo]}
 
 @app.get("/api/fluxo-caixa/{ano}/{mes}")
