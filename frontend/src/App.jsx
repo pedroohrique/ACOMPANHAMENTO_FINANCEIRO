@@ -115,7 +115,16 @@ function App() {
       const dWays = await resWays.json()
 
       setFluxo(dFluxo.fluxo)
-      setResumoMensal(dResumo.resumo || [])
+
+      // Limpeza forçada de dados para o gráfico no Frontend
+      const cleanResumo = (dResumo.resumo || []).map(item => ({
+        ...item,
+        gasto: typeof item.gasto === 'string' 
+          ? parseFloat(item.gasto.replace(/[R$\s.]/g, '').replace(',', '.')) || 0 
+          : parseFloat(item.gasto) || 0
+      }))
+      setResumoMensal(cleanResumo)
+
       setTransacoes(dTrans.transacoes || [])
       setDebitosPendentes(dDebitos.debitos || [])
       setReportOverview(dReport)
@@ -312,7 +321,7 @@ function App() {
                         formatter={(value) => formatCurrency(value)} 
                         contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.3)' }} 
                       />
-                      <Bar name="Gasto" dataKey="gasto" fill="url(#colorGasto)" radius={[6, 6, 0, 0]}>
+                      <Bar name="Gasto" dataKey="gasto" fill="#3b82f6" radius={[6, 6, 0, 0]}>
                         {resumoMensal.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill="url(#colorGasto)" />
                         ))}
