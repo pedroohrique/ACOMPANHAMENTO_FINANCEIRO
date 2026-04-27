@@ -59,6 +59,7 @@ def update_financial(array, id_registro):
                         array["flag_parcelamento"],
                         array["qt_parcelas"],
                         id_registro)
+            connection.commit()
     except Exception as e:
         log.error(f"Falha ao atualizar o registro selecionado: {e}")
     finally:
@@ -90,6 +91,7 @@ def record_financial(array):
                         array["qt_parcelas"],
                         array["desc_categoria"],
                         array["forma_pagamento"])
+            connection.commit()
     except Exception as e:
         log.error(f"Falha ao inserir o registro no banco de dados: {e}")
     finally:
@@ -101,6 +103,7 @@ def deleta_item_treeview(id):
     try:
         with connection:
             cursor.execute(query, id)
+            connection.commit()
     
     except Exception as e:
         log.error(f"Falha ao excluir o registro: {id}, erro: {e}")

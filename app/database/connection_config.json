@@ -1,6 +1,6 @@
 {
     "database": {
-        "server": "DESKTOP-98I4FGO",
+        "server": "localhost",
         "name": "FINANCEIRO",
         "user": "Admin",
         "password": "66tUa3ue"

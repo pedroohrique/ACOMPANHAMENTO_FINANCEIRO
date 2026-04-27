@@ -1,21 +1,25 @@
-# Arquivos compilados do Python
+# Python
 __pycache__/
 *.py[cod]
+.venv/
 
-# Ambiente virtual
+# Environment
 .env
+.env.local
+.env.example
 
-# Arquivos de configuração de IDE
+# IDE
 .vscode/
 .idea/
 
-# Arquivos gerados pelo PyInstaller
+# Build/Dist
 dist/
 build/
 *.spec
+node_modules/
 
-# Outros arquivos temporários
-*.tmp
-
+# App Specific
 app/utils/log_aplicacao.txt
-app/Relatórios
+app/Relatórios/
+*.pdf
+ngrok.exe

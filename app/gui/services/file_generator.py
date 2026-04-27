@@ -34,7 +34,7 @@ class GenerateFile:
         self.periodo = (self.mes_visualizacao, self.ano_visualizacao)
         self.logging = log_builder("file_generator.py")
         locale.setlocale(locale.LC_TIME, "Portuguese_Brazil.1252")
-        self.export_pdf()
+        self.caminho_gerado = self.export_pdf()
 
     def moeda(self, valor):
         try:

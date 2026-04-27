@@ -16,28 +16,31 @@ log = log_builder("database.py")
     
 
 def database_connection():
-    # database_config = load_config()
-    
-    # server = database_config["database"]["server"]
-    # database = database_config["database"]["name"]
-    # username = database_config["database"]["user"]
-    # password = database_config["database"]["password"]
-    
-    server = "localhost"
-    database = "FINANCEIRO"
-    username = "Admin"
-    password = "66tUa3ue!"
+    path = r"app\database\connection_config.json"
+    try:
+        with open(path, 'r') as f:
+            database_config = json.load(f)
+    except FileNotFoundError:
+        log.error(f"Arquivo de configuração não encontrado em: {path}")
+        return None
+
+    server = database_config["database"]["server"]
+    database = database_config["database"]["name"]
+    username = database_config["database"]["user"]
+    password = database_config["database"]["password"]
 
     # Verificação rápida
     if not all([server, database, username, password]):
         log.error("Uma ou mais variáveis de ambiente do banco não foram carregadas.")
-        log.debug(f"SERVER: {server}, DATABASE: {database}, USER: {username}, PASSWORD: {password}")
         return None
 
     try:
+        # Usando Autenticação do Windows e confiando no certificado conforme print enviado
         connection = pyodbc.connect(
             'DRIVER={ODBC Driver 17 for SQL Server};'
-            f'SERVER={server};DATABASE={database};UID={username};PWD={password}'
+            f'SERVER={server};DATABASE={database};'
+            'Trusted_Connection=yes;'
+            'TrustServerCertificate=yes;'
         )
         cursor = connection.cursor()
         return connection, cursor
