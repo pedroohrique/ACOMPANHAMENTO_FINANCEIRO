@@ -150,11 +150,18 @@ function App() {
 
   const filteredTransacoes = useMemo(() => {
     if (!searchTerm) return transacoes
-    const lowerSearch = searchTerm.toLowerCase()
+    
+    const normalize = (str) => 
+      String(str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+      
+    const lowerSearch = normalize(searchTerm)
+    
     return transacoes.filter(t => 
-      t.descricao?.toLowerCase().includes(lowerSearch) ||
-      t.local?.toLowerCase().includes(lowerSearch) ||
-      t.categoria?.toLowerCase().includes(lowerSearch)
+      normalize(t.descricao).includes(lowerSearch) ||
+      normalize(t.local).includes(lowerSearch) ||
+      normalize(t.categoria).includes(lowerSearch) ||
+      normalize(t.forma_pagamento).includes(lowerSearch) ||
+      normalize(t.dt_compra).includes(lowerSearch)
     )
   }, [transacoes, searchTerm])
 
